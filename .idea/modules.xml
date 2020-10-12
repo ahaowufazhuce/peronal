@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/spring/dependency-lookup/dependency-lookup.iml" filepath="$PROJECT_DIR$/spring/dependency-lookup/dependency-lookup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring/math/math.iml" filepath="$PROJECT_DIR$/spring/math/math.iml" />
+      <module fileurl="file://$PROJECT_DIR$/personal.iml" filepath="$PROJECT_DIR$/personal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring/spring.iml" filepath="$PROJECT_DIR$/spring/spring.iml" />
+    </modules>
+  </component>
+</project>
