@@ -7,7 +7,7 @@
 
     <import resource="dependency-lookup-context.xml"/>
 
-    <!---->
+    <!-- 给user 一个别名-->
     <alias name="user" alias="testUser"/>
 
 </beans>
