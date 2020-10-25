@@ -1,5 +1,6 @@
 package spring.bean.base;
 
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import spring.dependency.lookup.domain.User;
@@ -20,6 +21,12 @@ public class BeanDefinitionDemo {
         // 获取实例，并非终态，可以修改
         BeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
         // 直接构建
+        MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
+        propertyValues.add("name", "测试").add("age", 34);
+
+        propertyValues.addPropertyValue("name", "测试");
+        propertyValues.addPropertyValue("age", 34);
+
 
     }
 }

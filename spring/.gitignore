@@ -147,3 +147,4 @@ hs_err_pid*
 /spring-bean-base/spring-bean-base.iml
 /../.idea/shelf/Study.xml
 /.idea/vcs.xml
+/spring-bean-base/target/classes/META-INF/bean-definitions-context.xml
