@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="dependency-injection" />
         <module name="dependency-lookup" />
-        <module name="math" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="dependency-injection" target="1.5" />
       <module name="dependency-lookup" target="8" />
       <module name="math" target="1.5" />
       <module name="spring" target="1.5" />

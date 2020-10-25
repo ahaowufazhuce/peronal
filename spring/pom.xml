@@ -11,10 +11,14 @@
 
     <modules>
         <module>dependency-lookup</module>
-        <module>math</module>
+        <module>dependency-injection</module>
+        <module>ioc-container-overview</module>
+        <module>spring-bean-base</module>
     </modules>
 
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <spring.version>5.2.9.RELEASE</spring.version>
         <hutool.version>5.4.3</hutool.version>
     </properties>

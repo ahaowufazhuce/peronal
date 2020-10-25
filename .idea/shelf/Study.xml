@@ -1,0 +1,39 @@
+<changelist name="Study" date="1603532837462" recycled="false">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Study/shelved.patch" />
+  <option name="DESCRIPTION" value="Study" />
+  <binary>
+    <option name="BEFORE_PATH" value="spring/dependency-lookup/target/classes/spring/dependency/DependencyInjection.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="spring/dependency-lookup/target/classes/spring/dependency/lookup/DependencyLookUp.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="spring/math/target/classes/math/Lesson6.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="spring/dependency-lookup/target/classes/spring/dependency/lookup/annotation/Super.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="spring/dependency-lookup/target/classes/spring/dependency/lookup/domain/SuperUser.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="spring/dependency-lookup/target/classes/spring/dependency/lookup/domain/User.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="spring/dependency-lookup/target/classes/spring/dependency/lookup/repository/UserRepository.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+</changelist>

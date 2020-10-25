@@ -1,0 +1,608 @@
+Index: spring/dependency-lookup/src/main/resources/META-INF/dependency-lookup-context.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<beans\n        xmlns=\"http://www.springframework.org/schema/beans\"\n        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n        xsi:schemaLocation=\"http://www.springframework.org/schema/beans\n        https://www.springframework.org/schema/beans/spring-beans.xsd\">\n\n    <bean id=\"user\" class=\"spring.dependency.lookup.domain.User\">\n        <property name=\"id\" value=\"1\"/>\n        <property name=\"name\" value=\"张三\"/>\n    </bean>\n\n    <bean id=\"superUser\" class=\"spring.dependency.lookup.domain.SuperUser\" parent=\"user\" primary=\"true\">\n        <property name=\"address\" value=\"杭州\"/>\n    </bean>\n\n    <bean id=\"factoryBean\" class=\"org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean\">\n        <property name=\"targetBeanName\" value=\"user\"/>\n    </bean>\n</beans>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- spring/dependency-lookup/src/main/resources/META-INF/dependency-lookup-context.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/resources/META-INF/dependency-lookup-context.xml	(date 1603532103128)
+@@ -5,12 +5,12 @@
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+         https://www.springframework.org/schema/beans/spring-beans.xsd">
+ 
+-    <bean id="user" class="spring.dependency.lookup.domain.User">
++    <bean id="user" class="spring.ioc.overview.domain.User">
+         <property name="id" value="1"/>
+         <property name="name" value="张三"/>
+     </bean>
+ 
+-    <bean id="superUser" class="spring.dependency.lookup.domain.SuperUser" parent="user" primary="true">
++    <bean id="superUser" class="spring.ioc.overview.domain.SuperUser" parent="user" primary="true">
+         <property name="address" value="杭州"/>
+     </bean>
+ 
+Index: spring/dependency-lookup/src/main/java/spring/dependency/lookup/domain/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package spring.dependency.lookup.domain;\n\n/**\n * 用户\n *\n * @author pengxing on 2020/9/28\n */\npublic class User {\n    private Long id;\n    private String name;\n\n    public Long getId() {\n        return id;\n    }\n\n    public void setId(Long id) {\n        this.id = id;\n    }\n\n    public String getName() {\n        return name;\n    }\n\n    public void setName(String name) {\n        this.name = name;\n    }\n\n    @Override\n    public String toString() {\n        return \"User{\" +\n                \"id=\" + id +\n                \", name='\" + name + '\\'' +\n                '}';\n    }\n}\n
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/dependency/lookup/domain/User.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/java/spring/ioc/overview/domain/User.java	(date 1603532103136)
+@@ -1,4 +1,4 @@
+-package spring.dependency.lookup.domain;
++package spring.ioc.overview.domain;
+ 
+ /**
+  * 用户
+Index: spring/dependency-lookup/src/main/resources/META-INF/dependency-injection-context.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<beans\n        xmlns=\"http://www.springframework.org/schema/beans\"\n        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n        xsi:schemaLocation=\"http://www.springframework.org/schema/beans\n        https://www.springframework.org/schema/beans/spring-beans.xsd\">\n\n\n    <import resource=\"dependency-lookup-context.xml\"/>\n\n    <bean id=\"userRepository\" class=\"spring.dependency.lookup.repository.UserRepository\" autowire=\"byType\">\n        <!--        <property name=\"users\">-->\n        <!--            <util:list>-->\n        <!--                <ref bean=\"superUser\"></ref>-->\n        <!--                <ref bean=\"user\"></ref>-->\n        <!--            </util:list>-->\n        <!--        </property>-->\n    </bean>\n</beans>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- spring/dependency-lookup/src/main/resources/META-INF/dependency-injection-context.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/resources/META-INF/dependency-injection-context.xml	(date 1603532103140)
+@@ -8,7 +8,7 @@
+ 
+     <import resource="dependency-lookup-context.xml"/>
+ 
+-    <bean id="userRepository" class="spring.dependency.lookup.repository.UserRepository" autowire="byType">
++    <bean id="userRepository" class="spring.ioc.overview.repository.UserRepository" autowire="byType">
+         <!--        <property name="users">-->
+         <!--            <util:list>-->
+         <!--                <ref bean="superUser"></ref>-->
+Index: spring/dependency-lookup/src/main/java/spring/dependency/lookup/repository/UserRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package spring.dependency.lookup.repository;\n\nimport org.springframework.beans.factory.BeanFactory;\nimport org.springframework.beans.factory.ObjectFactory;\nimport org.springframework.context.ApplicationContext;\nimport spring.dependency.lookup.domain.User;\n\nimport java.util.List;\nimport java.util.StringJoiner;\n\n/**\n * UserRepository\n *\n * @author pengxing on 2020/10/3\n */\npublic class UserRepository {\n    /**\n     * 內建非 Bean 对象（依赖）\n     * 包括[user,superUser,factoryBean,userRepository]\n     */\n    private BeanFactory beanFactory;\n\n    /**\n     * 自定义bean\n     */\n    private List<User> users;\n\n    private ObjectFactory<ApplicationContext> objectFactory;\n\n    private ApplicationContext applicationContext;\n\n    public BeanFactory getBeanFactory() {\n        return beanFactory;\n    }\n\n    public void setBeanFactory(BeanFactory beanFactory) {\n        this.beanFactory = beanFactory;\n    }\n\n    public List<User> getUsers() {\n        return users;\n    }\n\n    public void setUsers(List<User> users) {\n        this.users = users;\n    }\n\n    public ObjectFactory<ApplicationContext> getObjectFactory() {\n        return objectFactory;\n    }\n\n    public void setObjectFactory(ObjectFactory<ApplicationContext> objectFactory) {\n        this.objectFactory = objectFactory;\n    }\n\n    public ApplicationContext getApplicationContext() {\n        return applicationContext;\n    }\n\n    public void setApplicationContext(ApplicationContext applicationContext) {\n        this.applicationContext = applicationContext;\n    }\n\n    @Override\n    public String toString() {\n        return new StringJoiner(\", \", UserRepository.class.getSimpleName() + \"[\", \"]\")\n                .add(\"beanFactory=\" + beanFactory)\n                .add(\"objectFactory=\" + objectFactory)\n                .add(\"users=\" + users)\n                .toString();\n    }\n}\n
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/dependency/lookup/repository/UserRepository.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/java/spring/ioc/overview/repository/UserRepository.java	(date 1603532644408)
+@@ -1,11 +1,9 @@
+-package spring.dependency.lookup.repository;
++package spring.ioc.overview.repository;
+ 
+ import org.springframework.beans.factory.BeanFactory;
+ import org.springframework.beans.factory.ObjectFactory;
+ import org.springframework.context.ApplicationContext;
+-import spring.dependency.lookup.domain.User;
+ 
+-import java.util.List;
+ import java.util.StringJoiner;
+ 
+ /**
+Index: spring/dependency-lookup/src/main/java/spring/dependency/lookup/DependencyLookUp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package spring.dependency.lookup;\n\nimport org.springframework.beans.factory.BeanFactory;\nimport org.springframework.beans.factory.ListableBeanFactory;\nimport org.springframework.beans.factory.ObjectFactory;\nimport org.springframework.context.support.ClassPathXmlApplicationContext;\nimport spring.dependency.lookup.annotation.Super;\nimport spring.dependency.lookup.domain.User;\n\nimport java.util.Map;\n\n/**\n * DependencyLookUp\n *\n * @author pengxing on 2020/9/28\n */\npublic class DependencyLookUp {\n\n    public static void main(String[] args) {\n        BeanFactory beanFactory = new ClassPathXmlApplicationContext(\"classpath:/META-INF/dependency-lookup-context.xml\");\n        lookupByAnnotation(beanFactory);\n        lookupByType(beanFactory);\n        lookupById(beanFactory);\n        lookupLazy(beanFactory);\n    }\n\n    private static void lookupByAnnotation(BeanFactory beanFactory) {\n        ListableBeanFactory listableBeanFactory = (ListableBeanFactory) beanFactory;\n        Map<String, Object> beansWithAnnotation = listableBeanFactory.getBeansWithAnnotation(Super.class);\n        System.out.println(\"lookupByAnnotation, result = \" + beansWithAnnotation);\n    }\n\n    private static void lookupByType(BeanFactory beanFactory) {\n        User user = beanFactory.getBean(User.class);\n        System.out.println(\"lookupByType, result = \" + user);\n    }\n\n    private static void lookupById(BeanFactory beanFactory) {\n        User user = (User) beanFactory.getBean(\"user\");\n        System.out.println(\"lookupById, result = \" + user);\n    }\n\n    private static void lookupLazy(BeanFactory beanFactory) {\n        ObjectFactory<User> objectFactory = (ObjectFactory<User>) beanFactory.getBean(\"factoryBean\");\n        System.out.println(\"lookupLazy, result = \" + objectFactory.getObject());\n    }\n}\n
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/dependency/lookup/DependencyLookUp.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/java/spring/ioc/overview/dependency/DependencyLookUpDemo.java	(date 1603532357673)
+@@ -1,20 +1,18 @@
+-package spring.dependency.lookup;
++package spring.ioc.overview.dependency;
+ 
+ import org.springframework.beans.factory.BeanFactory;
+ import org.springframework.beans.factory.ListableBeanFactory;
+-import org.springframework.beans.factory.ObjectFactory;
+ import org.springframework.context.support.ClassPathXmlApplicationContext;
+-import spring.dependency.lookup.annotation.Super;
+-import spring.dependency.lookup.domain.User;
++import spring.ioc.overview.annotation.Super;
+ 
+ import java.util.Map;
+ 
+ /**
+- * DependencyLookUp
++ * DependencyLookUpDemo
+  *
+  * @author pengxing on 2020/9/28
+  */
+-public class DependencyLookUp {
++public class DependencyLookUpDemo {
+ 
+     public static void main(String[] args) {
+         BeanFactory beanFactory = new ClassPathXmlApplicationContext("classpath:/META-INF/dependency-lookup-context.xml");
+Index: spring/dependency-lookup/src/main/java/spring/dependency/lookup/domain/SuperUser.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package spring.dependency.lookup.domain;\n\nimport spring.dependency.lookup.annotation.Super;\n\n/**\n * 超级用户\n *\n * @author pengxing on 2020/9/28\n */\n@Super\npublic class SuperUser extends User{\n    private String address;\n\n    public String getAddress() {\n        return address;\n    }\n\n    public void setAddress(String address) {\n        this.address = address;\n    }\n\n    @Override\n    public String toString() {\n        return \"SuperUser{\" +\n                \"address='\" + address + '\\'' +\n                \"} \" + super.toString();\n    }\n}\n
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/dependency/lookup/domain/SuperUser.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/java/spring/ioc/overview/domain/SuperUser.java	(date 1603532103113)
+@@ -1,6 +1,6 @@
+-package spring.dependency.lookup.domain;
++package spring.ioc.overview.domain;
+ 
+-import spring.dependency.lookup.annotation.Super;
++import spring.ioc.overview.annotation.Super;
+ 
+ /**
+  * 超级用户
+Index: spring/dependency-lookup/src/main/java/spring/dependency/lookup/annotation/Super.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package spring.dependency.lookup.annotation;\n\nimport java.lang.annotation.ElementType;\nimport java.lang.annotation.Retention;\nimport java.lang.annotation.RetentionPolicy;\nimport java.lang.annotation.Target;\n\n/**\n * 超级用户\n *\n * @author pengxing on 2020/10/3\n */\n@Target(ElementType.TYPE)\n@Retention(RetentionPolicy.RUNTIME)\npublic @interface Super {\n}\n
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/dependency/lookup/annotation/Super.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/java/spring/ioc/overview/annotation/Super.java	(date 1603532103117)
+@@ -1,4 +1,4 @@
+-package spring.dependency.lookup.annotation;
++package spring.ioc.overview.annotation;
+ 
+ import java.lang.annotation.ElementType;
+ import java.lang.annotation.Retention;
+Index: spring/dependency-lookup/src/main/java/spring/dependency/DependencyInjection.java
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/dependency/DependencyInjection.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/src/main/java/spring/dependency/DependencyInjection.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
+@@ -1,64 +0,0 @@
+-package spring.dependency;
+-
+-import org.springframework.beans.factory.BeanFactory;
+-import org.springframework.beans.factory.ListableBeanFactory;
+-import org.springframework.beans.factory.ObjectFactory;
+-import org.springframework.context.support.ClassPathXmlApplicationContext;
+-import spring.dependency.lookup.annotation.Super;
+-import spring.dependency.lookup.domain.User;
+-import spring.dependency.lookup.repository.UserRepository;
+-
+-import java.util.ArrayList;
+-import java.util.Map;
+-
+-/**
+- * DependencyLookUp
+- *
+- * @author pengxing on 2020/9/28
+- */
+-public class DependencyInjection {
+-
+-    /**
+-     *
+-    public static void main(String[] args) {
+-        BeanFactory beanFactory = new ClassPathXmlApplicationContext("classpath:/META-INF/dependency-injection-context.xml");
+-        UserRepository bean = beanFactory.getBean(UserRepository.class);
+-        System.out.println(bean.getApplicationContext() == beanFactory);
+-    }
+-     * @param args
+-     */
+-
+-    public static long[] rewards = {1, 2, 5, 10};  // 四种面额的纸币
+-
+-    /**
+-     * @Description:  使用函数的递归（嵌套）调用，找出所有可能的奖赏组合
+-     * @param totalReward-奖赏总金额，result-保存当前的解
+-     * @return void
+-     */
+-
+-    public static void get(long totalReward, ArrayList<Long> result) {
+-        // 当totalReward = 0时，证明它是满足条件的解，结束嵌套调用，输出解
+-        if (totalReward == 0) {
+-            System.out.println(result);
+-            return;
+-        }
+-        // 当totalReward < 0时，证明它不是满足条件的解，不输出
+-        else if (totalReward < 0) {
+-            return;
+-        } else {
+-            for (int i = 0; i < rewards.length; i++) {
+-                // 由于有4种情况，需要clone当前的解并传入被调用的函数
+-                ArrayList<Long> newResult = (ArrayList<Long>)(result.clone());
+-                // 记录当前的选择，解决一点问题
+-                newResult.add(rewards[i]);
+-                // 剩下的问题，留给嵌套调用去解决
+-                get(totalReward - rewards[i], newResult);
+-            }
+-        }
+-    }
+-
+-    public static void main(String[] args) {
+-        ArrayList<Long> result = new ArrayList<>();
+-        get(3, result);
+-    }
+-}
+Index: spring/math/src/main/java/math/Lesson6.java
+===================================================================
+--- spring/math/src/main/java/math/Lesson6.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/math/src/main/java/math/Lesson6.java	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
+@@ -1,90 +0,0 @@
+-package math;
+-
+-/**
+- * 递归
+- *
+- * @author pengxing on 2020/9/29
+- */
+-
+-import cn.hutool.core.util.ArrayUtil;
+-import cn.hutool.json.JSONUtil;
+-
+-public class Lesson6 {
+-
+-    public static void main(String[] args) {
+-        int[] array = new int[]{3, 1, 6, 4, 2, 9, 8};
+-        array = merge_sort(array);
+-        System.out.println(JSONUtil.toJsonStr(array));
+-    }
+-
+-    /**
+-     * 归并排序
+-     *
+-     * @param to_sort-等待排序的数组
+-     * @return int[]-排序后的数组
+-     * @Description: 使用函数的递归（嵌套）调用，实现归并排序（从小到大）
+-     */
+-
+-    public static int[] merge_sort(int[] to_sort) {
+-        if (to_sort == null) {
+-            return new int[0];
+-        }
+-        // 如果分解到只剩一个数，返回该数
+-        if (to_sort.length == 1) {
+-            return to_sort;
+-        }
+-        // 将数组分解成左右两半
+-        int mid = to_sort.length / 2;
+-        int[] left = ArrayUtil.sub(to_sort, 0, mid);
+-        int[] right = ArrayUtil.sub(to_sort, mid, to_sort.length);
+-        // 嵌套调用，对两半分别进行排序
+-        left = merge_sort(left);
+-        right = merge_sort(right);
+-        // 合并排序后的两半
+-        int[] merged = merge(left, right);
+-        return merged;
+-    }
+-
+-    /**
+-     * 合并
+-     *
+-     * @param a-第一个数组，b-第二个数组
+-     * @return int[]-合并后的数组
+-     * @Description: 合并两个已经排序完毕的数组（从小到大）
+-     */
+-
+-    public static int[] merge(int[] a, int[] b) {
+-        if (a == null) {
+-            a = new int[0];
+-        }
+-        if (b == null) {
+-            b = new int[0];
+-        }
+-        int[] merged_one = new int[a.length + b.length];
+-        int mi = 0, ai = 0, bi = 0;
+-        // 轮流从两个数组中取出较小的值，放入合并后的数组中
+-        while (ai < a.length && bi < b.length) {
+-            if (a[ai] <= b[bi]) {
+-                merged_one[mi] = a[ai];
+-                ai++;
+-            } else {
+-                merged_one[mi] = b[bi];
+-                bi++;
+-            }
+-            mi++;
+-        }
+-        // 将某个数组内剩余的数字放入合并后的数组中
+-        if (ai < a.length) {
+-            for (int i = ai; i < a.length; i++) {
+-                merged_one[mi] = a[i];
+-                mi++;
+-            }
+-        } else {
+-            for (int i = bi; i < b.length; i++) {
+-                merged_one[mi] = b[i];
+-                mi++;
+-            }
+-        }
+-        return merged_one;
+-    }
+-}
+\ No newline at end of file
+Index: spring/math/math.iml
+===================================================================
+--- spring/math/math.iml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/math/math.iml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
+@@ -1,27 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+-  <component name="FacetManager">
+-    <facet type="Spring" name="Spring">
+-      <configuration />
+-    </facet>
+-  </component>
+-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
+-    <output url="file://$MODULE_DIR$/target/classes" />
+-    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+-    <content url="file://$MODULE_DIR$">
+-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+-      <excludeFolder url="file://$MODULE_DIR$/target" />
+-    </content>
+-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+-    <orderEntry type="sourceFolder" forTests="false" />
+-    <orderEntry type="library" name="Maven: org.springframework:spring-context:5.2.9.RELEASE" level="project" />
+-    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.2.9.RELEASE" level="project" />
+-    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.2.9.RELEASE" level="project" />
+-    <orderEntry type="library" name="Maven: org.springframework:spring-core:5.2.9.RELEASE" level="project" />
+-    <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.2.9.RELEASE" level="project" />
+-    <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.2.9.RELEASE" level="project" />
+-    <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.4.3" level="project" />
+-  </component>
+-</module>
+\ No newline at end of file
+Index: spring/math/pom.xml
+===================================================================
+--- spring/math/pom.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/math/pom.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
+@@ -1,15 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project xmlns="http://maven.apache.org/POM/4.0.0"
+-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+-    <parent>
+-        <artifactId>spring</artifactId>
+-        <groupId>liu.study</groupId>
+-        <version>1.0-SNAPSHOT</version>
+-    </parent>
+-    <modelVersion>4.0.0</modelVersion>
+-
+-    <artifactId>math</artifactId>
+-
+-
+-</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"MavenProjectsManager\">\n    <option name=\"originalFiles\">\n      <list>\n        <option value=\"$PROJECT_DIR$/spring/pom.xml\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"ProjectRootManager\">\n    <output url=\"file://$PROJECT_DIR$/out\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ .idea/misc.xml	(date 1603179841863)
+@@ -4,6 +4,7 @@
+     <option name="originalFiles">
+       <list>
+         <option value="$PROJECT_DIR$/spring/pom.xml" />
++        <option value="$PROJECT_DIR$/jvm/pom.xml" />
+       </list>
+     </option>
+   </component>
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectModuleManager\">\n    <modules>\n      <module fileurl=\"file://$PROJECT_DIR$/spring/dependency-lookup/dependency-lookup.iml\" filepath=\"$PROJECT_DIR$/spring/dependency-lookup/dependency-lookup.iml\" />\n      <module fileurl=\"file://$PROJECT_DIR$/spring/math/math.iml\" filepath=\"$PROJECT_DIR$/spring/math/math.iml\" />\n      <module fileurl=\"file://$PROJECT_DIR$/personal.iml\" filepath=\"$PROJECT_DIR$/personal.iml\" />\n      <module fileurl=\"file://$PROJECT_DIR$/spring/spring.iml\" filepath=\"$PROJECT_DIR$/spring/spring.iml\" />\n    </modules>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/modules.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ .idea/modules.xml	(date 1603179841864)
+@@ -3,6 +3,7 @@
+   <component name="ProjectModuleManager">
+     <modules>
+       <module fileurl="file://$PROJECT_DIR$/spring/dependency-lookup/dependency-lookup.iml" filepath="$PROJECT_DIR$/spring/dependency-lookup/dependency-lookup.iml" />
++      <module fileurl="file://$PROJECT_DIR$/jvm/jvm.iml" filepath="$PROJECT_DIR$/jvm/jvm.iml" />
+       <module fileurl="file://$PROJECT_DIR$/spring/math/math.iml" filepath="$PROJECT_DIR$/spring/math/math.iml" />
+       <module fileurl="file://$PROJECT_DIR$/personal.iml" filepath="$PROJECT_DIR$/personal.iml" />
+       <module fileurl="file://$PROJECT_DIR$/spring/spring.iml" filepath="$PROJECT_DIR$/spring/spring.iml" />
+Index: .idea/leetcode/editor.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/leetcode/editor.xml	(date 1603352934333)
++++ .idea/leetcode/editor.xml	(date 1603352934333)
+@@ -0,0 +1,73 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="LeetcodeEditor">
++    <option name="projectConfig">
++      <map>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[11]盛最多水的容器.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[11]盛最多水的容器.java" />
++              <option name="questionId" value="11" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[1]两数之和.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[1]两数之和.java" />
++              <option name="questionId" value="1" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[20]有效的括号.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[20]有效的括号.java" />
++              <option name="questionId" value="20" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[26]删除排序数组中的重复项.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[26]删除排序数组中的重复项.java" />
++              <option name="questionId" value="26" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[70]爬楼梯.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[70]爬楼梯.java" />
++              <option name="questionId" value="70" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[剑指 Offer 49]丑数.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[剑指 Offer 49]丑数.java" />
++              <option name="questionId" value="100334" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[面试题 08.12]八皇后.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[面试题 08.12]八皇后.java" />
++              <option name="questionId" value="100233" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++        <entry key="$USER_HOME$/leetCode/src/leetcode/editor/cn/[面试题 16.10]生存人数.java">
++          <value>
++            <LeetcodeEditor>
++              <option name="path" value="$USER_HOME$/leetCode/src/leetcode/editor/cn/[面试题 16.10]生存人数.java" />
++              <option name="questionId" value="100351" />
++            </LeetcodeEditor>
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: spring/dependency-lookup/src/main/java/spring/ioc/overview/container/IoCContainerDemo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/ioc/overview/container/IoCContainerDemo.java	(date 1603532644406)
++++ spring/dependency-lookup/src/main/java/spring/ioc/overview/container/IoCContainerDemo.java	(date 1603532644406)
+@@ -0,0 +1,19 @@
++package spring.ioc.overview.container;
++
++import org.springframework.beans.factory.support.DefaultListableBeanFactory;
++import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
++
++/**
++ * IoCContainerDemo
++ *
++ * @author pengxing on 2020/10/24
++ */
++public class IoCContainerDemo {
++
++    public static void main(String[] args) {
++        // 创建beanFactory容器
++        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
++        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
++//        reader.loadBeanDefinitions();
++    }
++}
+\ No newline at end of file
+Index: spring/dependency-lookup/src/main/java/spring/ioc/overview/dependency/DependencyInjectionDemo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- spring/dependency-lookup/src/main/java/spring/ioc/overview/dependency/DependencyInjectionDemo.java	(date 1603532837339)
++++ spring/dependency-lookup/src/main/java/spring/ioc/overview/dependency/DependencyInjectionDemo.java	(date 1603532837339)
+@@ -0,0 +1,27 @@
++package spring.ioc.overview.dependency;
++
++import org.springframework.beans.factory.BeanFactory;
++import org.springframework.context.support.ClassPathXmlApplicationContext;
++import spring.ioc.overview.repository.UserRepository;
++
++/**
++ * DependencyLookUpDemo
++ *
++ * @author pengxing on 2020/9/28
++ */
++public class DependencyInjectionDemo {
++
++    /**
++     * 依赖的三种方式
++     * 自定义bean
++     * 内建bean
++     * 内建非bean -> 内建依赖
++     *
++     * @param args
++     */
++    public static void main(String[] args) {
++        BeanFactory beanFactory = new ClassPathXmlApplicationContext("classpath:/META-INF/dependency-injection-context.xml");
++        UserRepository bean = beanFactory.getBean(UserRepository.class);
++        System.out.println(bean.getApplicationContext() == beanFactory);
++    }
++}
+Index: spring/dependency-lookup/target/classes/META-INF/dependency-injection-context.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<beans\n        xmlns=\"http://www.springframework.org/schema/beans\"\n        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n        xsi:schemaLocation=\"http://www.springframework.org/schema/beans\n        https://www.springframework.org/schema/beans/spring-beans.xsd\">\n\n\n    <import resource=\"dependency-lookup-context.xml\"/>\n\n    <bean id=\"userRepository\" class=\"spring.dependency.lookup.repository.UserRepository\" autowire=\"byType\">\n        <!--        <property name=\"users\">-->\n        <!--            <util:list>-->\n        <!--                <ref bean=\"superUser\"></ref>-->\n        <!--                <ref bean=\"user\"></ref>-->\n        <!--            </util:list>-->\n        <!--        </property>-->\n    </bean>\n</beans>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- spring/dependency-lookup/target/classes/META-INF/dependency-injection-context.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/target/classes/META-INF/dependency-injection-context.xml	(date 1603532426088)
+@@ -8,7 +8,7 @@
+ 
+     <import resource="dependency-lookup-context.xml"/>
+ 
+-    <bean id="userRepository" class="spring.dependency.lookup.repository.UserRepository" autowire="byType">
++    <bean id="userRepository" class="spring.ioc.overview.repository.UserRepository" autowire="byType">
+         <!--        <property name="users">-->
+         <!--            <util:list>-->
+         <!--                <ref bean="superUser"></ref>-->
+Index: spring/dependency-lookup/target/classes/META-INF/dependency-lookup-context.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<beans\n        xmlns=\"http://www.springframework.org/schema/beans\"\n        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n        xsi:schemaLocation=\"http://www.springframework.org/schema/beans\n        https://www.springframework.org/schema/beans/spring-beans.xsd\">\n\n    <bean id=\"user\" class=\"spring.dependency.lookup.domain.User\">\n        <property name=\"id\" value=\"1\"/>\n        <property name=\"name\" value=\"张三\"/>\n    </bean>\n\n    <bean id=\"superUser\" class=\"spring.dependency.lookup.domain.SuperUser\" parent=\"user\" primary=\"true\">\n        <property name=\"address\" value=\"杭州\"/>\n    </bean>\n\n    <bean id=\"factoryBean\" class=\"org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean\">\n        <property name=\"targetBeanName\" value=\"user\"/>\n    </bean>\n</beans>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- spring/dependency-lookup/target/classes/META-INF/dependency-lookup-context.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ spring/dependency-lookup/target/classes/META-INF/dependency-lookup-context.xml	(date 1603532426089)
+@@ -5,12 +5,12 @@
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+         https://www.springframework.org/schema/beans/spring-beans.xsd">
+ 
+-    <bean id="user" class="spring.dependency.lookup.domain.User">
++    <bean id="user" class="spring.ioc.overview.domain.User">
+         <property name="id" value="1"/>
+         <property name="name" value="张三"/>
+     </bean>
+ 
+-    <bean id="superUser" class="spring.dependency.lookup.domain.SuperUser" parent="user" primary="true">
++    <bean id="superUser" class="spring.ioc.overview.domain.SuperUser" parent="user" primary="true">
+         <property name="address" value="杭州"/>
+     </bean>
+ 
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(date 1602468679586)
++++ .idea/vcs.xml	(date 1602468679586)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"CompilerConfiguration\">\n    <annotationProcessing>\n      <profile name=\"Maven default annotation processors profile\" enabled=\"true\">\n        <sourceOutputDir name=\"target/generated-sources/annotations\" />\n        <sourceTestOutputDir name=\"target/generated-test-sources/test-annotations\" />\n        <outputRelativeToContentRoot value=\"true\" />\n        <module name=\"dependency-lookup\" />\n        <module name=\"math\" />\n      </profile>\n    </annotationProcessing>\n    <bytecodeTargetLevel>\n      <module name=\"dependency-lookup\" target=\"8\" />\n      <module name=\"math\" target=\"1.5\" />\n      <module name=\"spring\" target=\"1.5\" />\n    </bytecodeTargetLevel>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(revision 6e73e92915646083374c68a9e514f21c0f8f5e54)
++++ .idea/compiler.xml	(date 1603260472154)
+@@ -12,6 +12,7 @@
+     </annotationProcessing>
+     <bytecodeTargetLevel>
+       <module name="dependency-lookup" target="8" />
++      <module name="jvm" target="7" />
+       <module name="math" target="1.5" />
+       <module name="spring" target="1.5" />
+     </bytecodeTargetLevel>
